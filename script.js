@@ -49,7 +49,11 @@ const virtualFiles = [
 const bootLines = [
   '',
   'BIOS DATA 15/01/2026 14:22:56 VER 1.02',
+<<<<<<< HEAD
   'CPU: UNIDADE DE PROCESSAMENTO NEURAL, VELOCIDADE: 3.6 GHZ',
+=======
+  'CPU: Intel Foderon 3, VELOCIDADE: 3.6 GHZ',
+>>>>>>> bbc3abb (Primeiro commit)
   '640K RAM SISTEMA... OK',
   '',
   'INICIALIZANDO TERMINAL...',

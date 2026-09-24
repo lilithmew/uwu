@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --calc-bg: #2c3e50;
+            --display-bg: #ecf0f1;
+            --text-color: #2c3e50;
+            --btn-bg: #ffffff;
+            --btn-hover: #e8ecef;
+            --btn-operator: #e67e22;
+            --btn-operator-hover: #d35400;
+            --btn-equal: #27ae60;
+            --btn-equal-hover: #219150;
+            --btn-clear: #e74c3c;
+            --btn-clear-hover: #c0392b;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator {
+            background-color: var(--calc-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            width: 320px;
+        }
+
+        .display {
+            background-color: var(--display-bg);
+            color: var(--text-color);
+            width: 100%;
+            height: 70px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 15px;
+            font-size: 2rem;
+            text-align: right;
+            outline: none;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 18px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: var(--btn-bg);
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: var(--btn-hover);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .operator {
+            background-color: var(--btn-operator);
+            color: white;
+        }
+
+        .operator:hover {
+            background-color: var(--btn-operator-hover);
+        }
+
+        .equal {
+            background-color: var(--btn-equal);
+            color: white;
+            grid-column: span 2;
+        }
+
+        .equal:hover {
+            background-color: var(--btn-equal-hover);
+        }
+
+        .clear {
+            background-color: var(--btn-clear);
+            color: white;
+        }
+
+        .clear:hover {
+            background-color: var(--btn-clear-hover);
+        }
+
+        @media (max-width: 400px) {
+            .calculator {
+                width: 90%;
+            }
+
+            button {
+                padding: 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" class="display" id="display" readonly>
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
+            <button class="operator" onclick="deleteLast()">⌫</button>
+
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('.')">.</button>
+
+            <button onclick="appendToDisplay('0')">0</button>
+            <button class="equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        function appendToDisplay(value) {
+            // Evita múltiplos operadores consecutivos
+            const lastChar = display.value.slice(-1);
+            const operators = ['+', '-', '*', '/'];
+
+            if (operators.includes(lastChar) && operators.includes(value)) {
+                display.value = display.value.slice(0, -1) + value;
+            } else {
+                display.value += value;
+            }
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function deleteLast() {
+            display.value = display.value.toString().slice(0, -1);
+        }
+
+        function calculate() {
+            try {
+                // Substitui × por * para avaliação
+                let expression = display.value.replace(/×/g, '*');
+
+                // Avalia a expressão de forma segura
+                if (expression === '') return;
+
+                // Usa Function constructor como alternativa mais segura que eval direto
+                const result = new Function('return ' + expression)();
+
+                // Formata o resultado para evitar números muito longos
+                if (!isFinite(result)) {
+                    display.value = 'Erro';
+                } else {
+                    display.value = Number(result.toFixed(10)).toString();
+                }
+            } catch (error) {
+                display.value = 'Erro';
+            }
+        }
+
+        // Suporte a teclado
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            const validKeys = '0123456789+-*/.';
+
+            if (validKeys.includes(key)) {
+                appendToDisplay(key);
+            } else if (key === 'Enter' || key === '=') {
+                event.preventDefault();
+                calculate();
+            } else if (key === 'Backspace') {
+                deleteLast();
+            } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
