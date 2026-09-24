@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERMINAL ARG</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="crt-overlay"></div>
+  <div id="screen">
+    <div id="start-message" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:20;cursor:pointer;">
+      <p>CLIQUE OU PRESSIONE QUALQUER TECLA PARA INICIAR</p>
+      <p style="font-size:12px;margin-top:10px;opacity:0.7;">[ ÁUDIO HABILITADO ]</p>
+    </div>
+    <div id="output"></div>
+    <div id="input-line" class="hidden">
+      <span id="prompt">C:\TERMINAL&gt;</span>
+      <span id="cursor">_</span>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+/* CRT Terminal Style */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #000;
+  color: #00ff00;
+  font-family: 'Courier New', Courier, monospace;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* CRT Screen Container */
+#screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  overflow-y: auto;
+  background: radial-gradient(ellipse at center, #001100 0%, #000000 100%);
+}
+
+/* CRT Scanline Effect */
+#screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Random Flicker Animation (subtle) */
+@keyframes crt-flicker {
+  0%   { opacity: 1; }
+  3%   { opacity: 0.92; }
+  6%   { opacity: 1; }
+  7%   { opacity: 0.96; }
+  8%   { opacity: 1; }
+  50%  { opacity: 1; }
+  52%  { opacity: 0.94; }
+  53%  { opacity: 1; }
+  80%  { opacity: 1; }
+  82%  { opacity: 0.93; }
+  83%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* CRT Glow + Flicker Overlay */
+#screen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+  pointer-events: none;
+  z-index: 9;
+  animation: crt-flicker 4s infinite;
+}
+
+/* Text Glow */
+#output, #input-line {
+  text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+  position: relative;
+  z-index: 5;
+}
+
+#output {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+#output div {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.boot-text {
+  color: #00ff00;
+}
+
+/* Input Line */
+#input-line {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+#input-line.hidden {
+  display: none;
+}
+
+#prompt {
+  color: #00ff00;
+  margin-right: 0;
+}
+
+/* Blinking Cursor */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+#cursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+  color: #00ff00;
+  font-weight: bold;
+}
+
+/* Scrollbar Styling */
+#screen::-webkit-scrollbar {
+  width: 10px;
+}
+
+#screen::-webkit-scrollbar-track {
+  background: #001100;
+}
+
+#screen::-webkit-scrollbar-thumb {
+  background: #00ff00;
+  border: 1px solid #003300;
+}
+
+#screen::-webkit-scrollbar-thumb:hover {
+  background: #00cc00;
+}
+
+/* Selection Color */
+::selection {
+  background: #00ff00;
+  color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #screen {
+    padding: 20px;
+  }
+
+  #output, #input-line {
+    font-size: 14px;
+  }
+}
